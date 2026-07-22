@@ -94,3 +94,40 @@ model = models.Sequential([
 ])
 
 model.summary()
+
+# STEP 3: Compilation & Training
+
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Setup Callbacks for better training management
+log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+
+# Early stopping prevents overfitting if validation loss stops decreasing
+early_stopping = callbacks.EarlyStopping(
+    monitor='val_loss', 
+    patience=7, 
+    restore_best_weights=True
+)
+
+# Reduce learning rate when the model gets stuck
+reduce_lr = callbacks.ReduceLROnPlateau(
+    monitor='val_loss', 
+    factor=0.5, 
+    patience=3, 
+    min_lr=1e-6
+)
+
+print("Starting training for up to 50 epochs (Early Stopping enabled)...")
+# Train the model with the new callbacks
+history = model.fit(
+    train_dataset,
+    validation_data=val_dataset,
+    epochs=50, # Increased epochs because early stopping will catch it
+    callbacks=[tensorboard_callback, early_stopping, reduce_lr]
+)
+
