@@ -131,3 +131,72 @@ history = model.fit(
     callbacks=[tensorboard_callback, early_stopping, reduce_lr]
 )
 
+# STEP 4: Evaluation & Visualization
+
+# 4A: Plot training vs validation accuracy and loss
+plt.figure(figsize=(12, 4))
+
+# Accuracy plot
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.title('Training and Validation Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend(loc='lower right')
+
+# Loss plot
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.title('Training and Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend(loc='upper right')
+
+plt.tight_layout()
+plt.show()
+
+# 4B: Display Confusion Matrix
+print("Generating Confusion Matrix...")
+y_true = []
+y_pred_probs = []
+
+for images, labels in val_dataset:
+    y_true.extend(tf.argmax(labels, axis=1).numpy())
+    preds = model.predict(images, verbose=0)
+    y_pred_probs.extend(preds)
+
+y_pred = np.argmax(y_pred_probs, axis=1)
+
+cm = confusion_matrix(y_true, y_pred)
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=class_names, yticklabels=class_names)
+plt.title('Confusion Matrix')
+plt.ylabel('Actual Emotion')
+plt.xlabel('Predicted Emotion')
+plt.show()
+
+print("\nClassification Report:\n", classification_report(y_true, y_pred, target_names=class_names))
+
+# 4C: Visualize Filters (Feature Maps)
+print("Visualizing feature maps for the first Convolutional Layer...")
+
+# Extract the outputs of the first Conv2D layer
+layer_outputs = [layer.output for layer in model.layers if isinstance(layer, layers.Conv2D)]
+activation_model = tf.keras.models.Model(inputs=model.inputs, outputs=layer_outputs[0])
+
+for images, labels in val_dataset.take(1):
+    sample_image = images[0:1] 
+    break
+
+activations = activation_model.predict(sample_image)
+
+plt.figure(figsize=(10, 10))
+for i in range(16): 
+    plt.subplot(4, 4, i + 1)
+    plt.imshow(activations[0, :, :, i], cmap='viridis')
+    plt.axis('off')
+plt.suptitle('First Conv2D Layer Feature Maps', fontsize=16)
+plt.show()
