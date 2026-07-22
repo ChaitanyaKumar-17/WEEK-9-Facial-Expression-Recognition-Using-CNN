@@ -4,13 +4,13 @@ A robust Python machine learning project designed to ingest facial image data, p
 
 ---
 
-## 💡 Overview[cite: 1]
+## 💡 Overview
 
 Modern applications rely on computer vision to identify distinct facial expressions for sentiment analysis, human-computer interaction, and accessibility tools. This project automates a workflow for extracting visual features from image datasets. By applying data augmentation, utilizing deep convolutional layers, and visualizing the network's feature maps, the model transforms raw pixel data into classified emotion profiles.
 
 ---
 
-## ✨ Key Features[cite: 1]
+## ✨ Key Features
 
 *   **Automated Data Acquisition:** Utilizes the `kagglehub` API to seamlessly download and extract the FER-2013 dataset directly into the local environment.
 *   **Data Augmentation:** Implements built-in Keras augmentation layers to dynamically transform images during training, specifically utilizing:
@@ -23,7 +23,7 @@ Modern applications rely on computer vision to identify distinct facial expressi
 
 ---
 
-## 🛠️ Prerequisites[cite: 1]
+## 🛠️ Prerequisites
 
 Ensure you have the following installed before running the project:
 *   Python 3.8 or higher
@@ -32,7 +32,7 @@ Ensure you have the following installed before running the project:
 
 ---
 
-## 🚀 Quick Start Guide[cite: 1]
+## 🚀 Quick Start Guide
 
 1.  Clone this repository to your local machine.
 2.  Open your terminal or command prompt and install the necessary dependencies:
@@ -46,7 +46,7 @@ Ensure you have the following installed before running the project:
 
 ---
 
-## 📊 Expected Output[cite: 1]
+## 📊 Expected Output
 
 Upon successful execution, the script will process the image data in memory and output visual insights, including:
 
@@ -56,7 +56,7 @@ Upon successful execution, the script will process the image data in memory and 
 
 ---
 
-## 🧩 Pipeline Architecture: How It Works[cite: 1]
+## 🧩 Pipeline Architecture: How It Works
 
 This script serves as a practical application of standard deep learning pipelines tailored for computer vision tasks:
 
