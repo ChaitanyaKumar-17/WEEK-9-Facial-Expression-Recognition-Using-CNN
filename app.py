@@ -48,3 +48,49 @@ val_dataset = val_dataset.map(lambda x, y: (normalization_layer(x), y))
 AUTOTUNE = tf.data.AUTOTUNE
 train_dataset = train_dataset.cache().prefetch(buffer_size=AUTOTUNE)
 val_dataset = val_dataset.cache().prefetch(buffer_size=AUTOTUNE)
+
+# STEP 2: Model Architecture
+
+print("Building the CNN model...")
+
+model = models.Sequential([
+    layers.InputLayer(input_shape=(48, 48, 3)),
+    
+    # Data Augmentation (Only active during training)
+    layers.RandomFlip("horizontal"),
+    layers.RandomRotation(0.1),
+    layers.RandomZoom(0.1),
+    
+    # Block 1
+    layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
+    layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
+    layers.MaxPooling2D((2, 2)),
+    layers.Dropout(0.25),
+    
+    # Block 2
+    layers.Conv2D(128, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
+    layers.Conv2D(128, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
+    layers.MaxPooling2D((2, 2)),
+    layers.Dropout(0.25),
+    
+    # Block 3
+    layers.Conv2D(256, (3, 3), padding='same', activation='relu'),
+    layers.BatchNormalization(),
+    layers.MaxPooling2D((2, 2)),
+    layers.Dropout(0.25),
+    
+    # Flatten -> Dense -> Dropout
+    layers.Flatten(),
+    layers.Dense(256, activation='relu'),
+    layers.BatchNormalization(),
+    layers.Dropout(0.5),
+    
+    # Output Layer
+    layers.Dense(7, activation='softmax')
+])
+
+model.summary()
